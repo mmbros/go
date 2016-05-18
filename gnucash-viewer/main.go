@@ -34,21 +34,21 @@ func main() {
 	fmt.Printf("accounts: %d\n", accounts.Len())
 	fmt.Printf("accounts.ROOT: %v\n", accounts.Root)
 
-	fmt.Printf("tansactions: %d\n", len(book.TransactionList))
+	fmt.Printf("tansactions: %d\n", len(book.Transactions))
 
 	acc := book.AccountByName("Conto Arancio")
 	fmt.Printf("ACCOUNT %v\n", acc)
 
 	// for j, at := range acc.AccountTransactionList {
 	// 	fmt.Printf("%02d) %s %s %5.2f %7.2f %7.0f\n",
-	t := book.TransactionList[0]
+	t := book.Transactions[0]
 	fmt.Printf("%v\n", t)
 
 	fmt.Printf("splits: %d\n", len(t.SplitList))
 
 	s := t.SplitList[0]
-	fmt.Println(&s)
+	fmt.Println(s)
 
-	accounts.PrintTree("    ")
+	// accounts.PrintTree("    ")
 
 }
