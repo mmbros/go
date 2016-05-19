@@ -1,4 +1,4 @@
-package numeric
+package model
 
 import (
 	"encoding/xml"

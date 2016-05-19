@@ -38,6 +38,7 @@ func main() {
 
 	acc := book.AccountByName("Conto Arancio")
 	fmt.Printf("ACCOUNT %v\n", acc)
+	acc.PrintAccTrxList()
 
 	// for j, at := range acc.AccountTransactionList {
 	// 	fmt.Printf("%02d) %s %s %5.2f %7.2f %7.0f\n",

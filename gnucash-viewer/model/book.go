@@ -1,6 +1,9 @@
 package model
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"sort"
+)
 
 // Book type
 type Book struct {
@@ -22,5 +25,15 @@ func (b *Book) AccountByName(name string) *Account {
 }
 
 func (b *Book) postLoadXML() error {
-	return b.Accounts.postLoadXML()
+
+	if err := b.Accounts.initAccountTree(); err != nil {
+		return err
+	}
+
+	// sort Transactions by DatePosted
+	sort.Sort(byDatePosted(b.Transactions))
+
+	b.Accounts.initAccountTransactionList(b.Transactions)
+
+	return nil
 }

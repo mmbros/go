@@ -28,9 +28,9 @@ type Account struct {
 	ParentID    string      `xml:"parent"`
 	Currency    string      `xml:"commodity>id"`
 
-	Parent   *Account
-	Children []*Account
-	//	AccountTransactionList []*AccountTransaction
+	Parent     *Account
+	Children   []*Account
+	AccTrxList []*AccountTransaction
 }
 
 func (a *Account) String() string {
@@ -74,7 +74,7 @@ func (accounts *Accounts) Len() int {
 	return len(accounts.Map)
 }
 
-func (accounts *Accounts) postLoadXML() error {
+func (accounts *Accounts) initAccountTree() error {
 
 	// step 1: initilize root account and parent/children fields
 	for _, a := range accounts.Map {
@@ -87,9 +87,7 @@ func (accounts *Accounts) postLoadXML() error {
 			if accounts.Root != nil {
 				return fmt.Errorf("Not Implemented: multiple ROOT account")
 			}
-
 			accounts.Root = a
-			fmt.Printf("*************** ROOT: %v\n", a)
 
 		} else {
 			// not root account: set parent and children
@@ -109,6 +107,38 @@ func (accounts *Accounts) postLoadXML() error {
 	}
 
 	return nil
+}
+
+func (accounts *Accounts) initAccountTransactionList(transactions []*Transaction) {
+	// initialize each Split.Account variable and creates each Account.AccTrxList field
+	// NOTE: transaction must be already ordered by DatePosted
+	//       so that also AccTrxList will be ordered by DatePosted
+	for _, t := range transactions {
+		for _, s := range t.SplitList {
+			a := accounts.Map[s.AccountID]
+			s.Account = a
+			at := AccountTransaction{Transaction: t, Split: s}
+			a.AccTrxList = append(a.AccTrxList, &at)
+		}
+	}
+
+	// initialize account balance
+	for _, a := range accounts.Map {
+		var balance Numeric
+		for _, at := range a.AccTrxList {
+
+			v := at.Split.Value
+			balance.AddEqual(&v)
+			at.Balance.Set(&balance)
+
+			if v.Sign() >= 0 {
+				at.PlusValue.Set(&v)
+			} else {
+				v.NegEqual()
+				at.MinusValue.Set(&v)
+			}
+		}
+	}
 }
 
 // used to sort each Account.children list
@@ -139,4 +169,18 @@ func (accounts *Accounts) PrintTree(indent string) {
 	}
 
 	auxPrintTree(accounts.Root, 0, indent)
+}
+
+// PrintAccTrxList ...
+func (a *Account) PrintAccTrxList() {
+	for j, at := range a.AccTrxList {
+		fmt.Printf("%02d) %v %8.2f %8.2f %9.2f %s\n",
+			j+1,
+			at.Transaction.DatePosted,
+			at.PlusValue.Float64(),
+			at.MinusValue.Float64(),
+			at.Balance.Float64(),
+			at.Description(),
+		)
+	}
 }
