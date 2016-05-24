@@ -9,7 +9,7 @@ type Transaction struct {
 	DatePosted  Date     `xml:"date-posted>date"`
 	DateEntered Date     `xml:"date-entered>date"`
 	Description string   `xml:"description"`
-	SplitList   []*Split `xml:"splits>split"`
+	Splits      []*Split `xml:"splits>split"`
 }
 
 func (t *Transaction) String() string {

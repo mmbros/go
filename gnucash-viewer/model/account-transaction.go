@@ -25,3 +25,8 @@ func (at *AccountTransaction) Description() string {
 func (at *AccountTransaction) String() string {
 	return fmt.Sprintf("AccTrx{Plus:%0.2f, Minus:%0.2f, Balance:%0.2f}", at.PlusValue.Float64(), at.MinusValue.Float64(), at.Balance.Float64())
 }
+
+// Account returns Split.Account of the AccountTransaction object
+func (at *AccountTransaction) Account() *Account {
+	return at.Split.Account
+}

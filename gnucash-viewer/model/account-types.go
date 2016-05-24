@@ -115,10 +115,15 @@ func (at *AccountType) UnmarshalXML(d *xml.Decoder, start xml.StartElement) erro
 	return nil
 }
 
-func (at AccountType) String() string {
+// Info returns the AccountType's information object: AccountTypeInfo.
+func (at AccountType) Info() AccountTypeInfo {
 	info, ok := AccountTypeInfos[at]
 	if !ok {
-		return "ERROR"
+		panic("Invalid AccountType")
 	}
-	return info.label
+	return info
+}
+
+func (at AccountType) String() string {
+	return at.Info().label
 }

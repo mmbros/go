@@ -114,7 +114,7 @@ func (accounts *Accounts) initAccountTransactionList(transactions []*Transaction
 	// NOTE: transaction must be already ordered by DatePosted
 	//       so that also AccTrxList will be ordered by DatePosted
 	for _, t := range transactions {
-		for _, s := range t.SplitList {
+		for _, s := range t.Splits {
 			a := accounts.Map[s.AccountID]
 			s.Account = a
 			at := AccountTransaction{Transaction: t, Split: s}
@@ -125,9 +125,17 @@ func (accounts *Accounts) initAccountTransactionList(transactions []*Transaction
 	// initialize account balance
 	for _, a := range accounts.Map {
 		var balance Numeric
+
+		// recupera, in funzione dell'account type, se occorre invertire i valori
+		invertValues := a.Type.Info().invertValues
+
 		for _, at := range a.AccTrxList {
 
 			v := at.Split.Value
+			if invertValues {
+				v.NegEqual()
+			}
+
 			balance.AddEqual(&v)
 			at.Balance.Set(&balance)
 
@@ -173,6 +181,11 @@ func (accounts *Accounts) PrintTree(indent string) {
 
 // PrintAccTrxList ...
 func (a *Account) PrintAccTrxList() {
+	info := a.Type.Info()
+
+	fmt.Printf("  # Date       %s       %s  Balance\n", info.minusLabel, info.plusLabel)
+	fmt.Println("--- ---------- -------- --------")
+
 	for j, at := range a.AccTrxList {
 		fmt.Printf("%02d) %v %8.2f %8.2f %9.2f %s\n",
 			j+1,

@@ -36,7 +36,8 @@ func main() {
 
 	fmt.Printf("tansactions: %d\n", len(book.Transactions))
 
-	acc := book.AccountByName("Conto Arancio")
+	// acc := book.AccountByName("Conto Arancio")
+	acc := book.AccountByName("Stipendio")
 	fmt.Printf("ACCOUNT %v\n", acc)
 	acc.PrintAccTrxList()
 
@@ -45,9 +46,9 @@ func main() {
 	t := book.Transactions[0]
 	fmt.Printf("%v\n", t)
 
-	fmt.Printf("splits: %d\n", len(t.SplitList))
+	fmt.Printf("splits: %d\n", len(t.Splits))
 
-	s := t.SplitList[0]
+	s := t.Splits[0]
 	fmt.Println(s)
 
 	// accounts.PrintTree("    ")
