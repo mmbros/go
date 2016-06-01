@@ -7,10 +7,10 @@ import (
 
 // Book type
 type Book struct {
-	XMLName      xml.Name       `xml:"book"`
-	ID           string         `xml:"id"`
-	Accounts     *Accounts      `xml:"account"`
-	Transactions []*Transaction `xml:"transaction"`
+	XMLName      xml.Name     `xml:"book"`
+	ID           string       `xml:"id"`
+	Accounts     *Accounts    `xml:"account"`
+	Transactions Transactions `xml:"transaction"`
 }
 
 // AccountByName return the Book's Account with given name

@@ -37,6 +37,19 @@ func (a *Account) String() string {
 	return fmt.Sprintf("Account{Name: %s, Type: %v}", a.Name, a.Type)
 }
 
+// HasAncestor returns true if account `a` has the given account as ancestor.
+// if a == ancestor return true, also.
+func (a *Account) HasAncestor(ancestor *Account) bool {
+	x := a
+	for x != nil {
+		if x == ancestor {
+			return true
+		}
+		x = x.Parent
+	}
+	return false
+}
+
 // UnmarshalXML function unmarshal an AccountMap variable
 // func (am *AccountMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 //

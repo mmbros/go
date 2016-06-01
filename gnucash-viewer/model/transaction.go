@@ -2,6 +2,9 @@ package model
 
 import "fmt"
 
+// Transactions type
+type Transactions []*Transaction
+
 // Transaction type
 type Transaction struct {
 	ID          string   `xml:"id"`
@@ -18,7 +21,7 @@ func (t *Transaction) String() string {
 }
 
 // used to sort Transactions
-type byDatePosted []*Transaction
+type byDatePosted Transactions
 
 func (t byDatePosted) Len() int           { return len(t) }
 func (t byDatePosted) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mmbros/go/gnucash-viewer/model"
+	"github.com/mmbros/go/gnucash-viewer/report"
 )
 
 var gnucashPath = flag.String("gnucash-file", "data/data.gnucash", "GnuCash file path")
@@ -53,4 +54,8 @@ func main() {
 
 	// accounts.PrintTree("    ")
 
+	dateFrom := model.NewDate(2016, 1, 2, false)
+	dateTo := model.NewDate(2016, 1, 2, true)
+
+	report.Uscite(book, dateFrom, dateTo)
 }
